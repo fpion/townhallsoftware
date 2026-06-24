@@ -6,6 +6,7 @@ namespace App\Domain\MunicipalCouncil\Entity;
 
 use App\Domain\MunicipalCouncil\Event\AttendanceRegistered;
 use App\Domain\MunicipalCouncil\Event\CouncilSessionClosed;
+use App\Domain\MunicipalCouncil\Event\CouncilSessionCreated;
 use App\Domain\MunicipalCouncil\Event\CouncilSessionOpened;
 use App\Domain\MunicipalCouncil\Event\DeliberationAdded;
 use App\Domain\MunicipalCouncil\Event\DeliberationVoted;
@@ -60,6 +61,14 @@ class CouncilSession
         }
 
         $this->status = SessionStatus::PLANNED;
+
+        $this->domainEvents[] = new CouncilSessionCreated(
+            $this->id,
+            $this->townHallCode,
+            $this->date,
+            $this->orderOfBusiness,
+            new \DateTimeImmutable(),
+        );
     }
 
     // -------------------------------------------------------------------------
