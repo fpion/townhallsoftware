@@ -185,6 +185,12 @@ class CouncilSession
             );
         }
 
+        if (!$this->invitationsSent) {
+            throw new \DomainException(
+                'La séance ne peut être ouverte sans que les convocations aient été expédiées aux conseillers (art. L2121-11 CGCT).'
+            );
+        }
+
         $presentCount = $this->getPresentCount();
         $quorum = (int) floor($totalActiveCouncilors / 2) + 1;
 
