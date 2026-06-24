@@ -14,6 +14,7 @@ class Councilor
         private string $firstName,
         private string $lastName,
         private CouncilorRole $role,
+        private string $email,
         private bool $active = true,
     ) {
         if (trim($firstName) === '') {
@@ -21,6 +22,11 @@ class Councilor
         }
         if (trim($lastName) === '') {
             throw new \InvalidArgumentException('Le nom du conseiller ne peut pas être vide.');
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \InvalidArgumentException(
+                sprintf('L\'adresse email "%s" est invalide.', $email)
+            );
         }
     }
 
@@ -42,6 +48,11 @@ class Councilor
     public function getFullName(): string
     {
         return $this->firstName . ' ' . $this->lastName;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 
     public function getRole(): CouncilorRole

@@ -7,12 +7,14 @@ namespace App\Domain\MunicipalCouncil\Entity;
 use App\Domain\MunicipalCouncil\Event\AttendanceRegistered;
 use App\Domain\MunicipalCouncil\Event\CouncilSessionClosed;
 use App\Domain\MunicipalCouncil\Event\CouncilSessionCreated;
+use App\Domain\MunicipalCouncil\Event\CouncilSessionInvitationsSent;
 use App\Domain\MunicipalCouncil\Event\CouncilSessionOpened;
 use App\Domain\MunicipalCouncil\Event\DeliberationAdded;
 use App\Domain\MunicipalCouncil\Event\DeliberationVoted;
 use App\Domain\MunicipalCouncil\Event\DomainEvent;
 use App\Domain\MunicipalCouncil\Exception\CouncilorAlreadyRegisteredAttendanceException;
 use App\Domain\MunicipalCouncil\Exception\DeliberationNotFoundException;
+use App\Domain\MunicipalCouncil\Exception\InvitationAlreadySentException;
 use App\Domain\MunicipalCouncil\Exception\QuorumNotReachedException;
 use App\Domain\MunicipalCouncil\Exception\SessionAlreadyClosedException;
 use App\Domain\MunicipalCouncil\Exception\SessionNotOpenException;
@@ -46,6 +48,7 @@ class CouncilSession
 
     private SessionStatus $status;
     private int $deliberationSequence = 0;
+    private bool $invitationsSent = false;
 
     public function __construct(
         private readonly CouncilSessionId $id,
@@ -69,6 +72,62 @@ class CouncilSession
             $this->orderOfBusiness,
             new \DateTimeImmutable(),
         );
+    }
+
+    // -------------------------------------------------------------------------
+    // Convocations (art. L2121-11 CGCT)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Expédie les convocations à chaque conseiller municipal avec l'ordre du jour
+     * et les points inscrits à délibérer.
+     *
+     * La loi impose un délai minimum de 5 jours francs avant la séance
+     * (art. L2121-11 CGCT). Cette règle doit être vérifiée par l'appelant.
+     *
+     * @param Councilor[] $councilors Liste des conseillers à convoquer
+     */
+    public function dispatchInvitations(array $councilors): void
+    {
+        if ($this->status !== SessionStatus::PLANNED) {
+            throw new \LogicException(
+                'Les convocations ne peuvent être expédiées que pour une séance planifiée.'
+            );
+        }
+
+        if ($this->invitationsSent) {
+            throw new InvitationAlreadySentException(
+                'Les convocations ont déjà été expédiées pour cette séance.'
+            );
+        }
+
+        if ($councilors === []) {
+            throw new \InvalidArgumentException(
+                'La liste des destinataires de la convocation ne peut pas être vide.'
+            );
+        }
+
+        $this->invitationsSent = true;
+
+        $agendaItems = array_values(
+            array_map(fn(Deliberation $d) => $d->getTitle(), $this->deliberations)
+        );
+
+        $notifiedIds = array_map(fn(Councilor $c) => $c->getId(), $councilors);
+
+        $this->domainEvents[] = new CouncilSessionInvitationsSent(
+            sessionId: $this->id,
+            sessionDate: $this->date,
+            orderOfBusiness: $this->orderOfBusiness,
+            agendaItems: $agendaItems,
+            notifiedCouncilorIds: $notifiedIds,
+            occurredAt: new \DateTimeImmutable(),
+        );
+    }
+
+    public function areInvitationsSent(): bool
+    {
+        return $this->invitationsSent;
     }
 
     // -------------------------------------------------------------------------
