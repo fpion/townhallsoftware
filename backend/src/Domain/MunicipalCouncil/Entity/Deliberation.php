@@ -94,4 +94,19 @@ class Deliberation
     {
         return $this->status === DeliberationStatus::ADOPTED;
     }
+
+    public static function reconstitute(
+        DeliberationId $id,
+        string $number,
+        string $title,
+        string $description,
+        DeliberationStatus $status,
+        ?VoteResult $voteResult,
+    ): self {
+        $deliberation = new self($id, $number, $title, $description);
+        $deliberation->status = $status;
+        $deliberation->voteResult = $voteResult;
+
+        return $deliberation;
+    }
 }

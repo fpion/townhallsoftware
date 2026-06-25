@@ -380,6 +380,11 @@ class CouncilSession
         );
     }
 
+    public function getDeliberationSequence(): int
+    {
+        return $this->deliberationSequence;
+    }
+
     public function isOpen(): bool
     {
         return $this->status === SessionStatus::OPEN;
@@ -388,6 +393,44 @@ class CouncilSession
     public function isClosed(): bool
     {
         return $this->status === SessionStatus::CLOSED;
+    }
+
+    /**
+     * Recrée une CouncilSession à partir de son état persisté,
+     * sans émettre d'événements domaine (pattern reconstitution).
+     *
+     * @param Attendance[]   $attendances
+     * @param Deliberation[] $deliberations
+     */
+    public static function reconstitute(
+        CouncilSessionId $id,
+        string $townHallCode,
+        \DateTimeImmutable $date,
+        string $orderOfBusiness,
+        SessionType $type,
+        SessionStatus $status,
+        bool $invitationsSent,
+        int $deliberationSequence,
+        array $attendances,
+        array $deliberations,
+    ): self {
+        $session = new self($id, $townHallCode, $date, $orderOfBusiness, $type);
+        $session->domainEvents        = [];
+        $session->status              = $status;
+        $session->invitationsSent     = $invitationsSent;
+        $session->deliberationSequence = $deliberationSequence;
+
+        $session->attendances = [];
+        foreach ($attendances as $a) {
+            $session->attendances[$a->getCouncilorId()->getValue()] = $a;
+        }
+
+        $session->deliberations = [];
+        foreach ($deliberations as $d) {
+            $session->deliberations[$d->getId()->getValue()] = $d;
+        }
+
+        return $session;
     }
 
     // -------------------------------------------------------------------------

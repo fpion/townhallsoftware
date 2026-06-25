@@ -19,12 +19,11 @@ services:
     App\:
         resource: '../src/'
 
-    # Liaisons des interfaces de dépôt vers les implémentations In-Memory
     App\Domain\MunicipalCouncil\Repository\CouncilSessionRepositoryInterface:
-        alias: App\Infrastructure\MunicipalCouncil\Persistence\InMemoryCouncilSessionRepository
+        alias: App\Infrastructure\MunicipalCouncil\Persistence\DoctrineCouncilSessionRepository
 
     App\Domain\MunicipalCouncil\Repository\CouncilorRepositoryInterface:
-        alias: App\Infrastructure\MunicipalCouncil\Persistence\InMemoryCouncilorRepository
+        alias: App\Infrastructure\MunicipalCouncil\Persistence\DoctrineCouncilorRepository
 
     App\Application\MunicipalCouncil\Port\CouncilorNotifierInterface:
         alias: App\Infrastructure\MunicipalCouncil\Notification\LogCouncilorNotifier
@@ -33,4 +32,4 @@ services:
         alias: App\Infrastructure\MunicipalCouncil\Clock\SystemClock
 
     App\Domain\TownHall\Repository\TownHallRepositoryInterface:
-        alias: App\Infrastructure\TownHall\Persistence\InMemoryTownHallRepository
+        alias: App\Infrastructure\TownHall\Persistence\DoctrineTownHallRepository
