@@ -34,7 +34,11 @@ export default async function TownHallsPage() {
       ) : (
         <div className="divide-y divide-neutral-200 dark:divide-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-800">
           {townHalls.map((t) => (
-            <div key={t.code} className="flex items-start justify-between p-4">
+            <a
+              key={t.code}
+              href={`/town-halls/${t.code}`}
+              className="flex items-start justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
+            >
               <div>
                 <p className="font-medium">{t.name}</p>
                 <p className="text-sm text-neutral-500">
@@ -48,7 +52,7 @@ export default async function TownHallsPage() {
                 <p className="font-medium">{t.maxCouncilors} conseillers</p>
                 <p className="text-neutral-500">{t.maxAdjoints} adjoints max</p>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       )}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { listTownHalls } from '@/lib/api'
+import type { TownHallView } from '@/lib/types'
 import { AssignRoleForm } from './Form'
 
 export const metadata: Metadata = { title: 'Attribuer un rôle' }
@@ -7,7 +8,7 @@ export const metadata: Metadata = { title: 'Attribuer un rôle' }
 export default async function AssignRolePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  let townHalls = []
+  let townHalls: TownHallView[] = []
   try {
     townHalls = await listTownHalls()
   } catch {

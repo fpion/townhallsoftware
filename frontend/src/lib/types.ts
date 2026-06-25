@@ -51,6 +51,16 @@ export interface TownHallView {
   maxAdjoints: number
 }
 
+export interface CouncilSessionSummaryView {
+  id: string
+  townHallCode: string
+  date: string
+  status: SessionStatus
+  statusLabel: string
+  sessionType: string
+  exceptional: boolean
+}
+
 export interface CouncilorView {
   id: string
   firstName: string

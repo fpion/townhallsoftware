@@ -1,4 +1,4 @@
-import type { CouncilSessionView, TownHallView, CouncilorView } from './types'
+import type { CouncilSessionView, CouncilSessionSummaryView, TownHallView, CouncilorView } from './types'
 
 const API_BASE = process.env.BACKEND_URL ?? 'http://localhost:8000'
 
@@ -59,6 +59,10 @@ export async function assignCouncilorRole(
 }
 
 // ── Council sessions ────────────────────────────────────────────────────────
+
+export async function listCouncilSessions(townHallCode: string): Promise<CouncilSessionSummaryView[]> {
+  return apiFetch(`/api/listCouncilSessions?townHallCode=${encodeURIComponent(townHallCode)}`)
+}
 
 export async function getCouncilSession(id: string): Promise<CouncilSessionView> {
   return apiFetch(`/api/getCouncilSession/${id}`)

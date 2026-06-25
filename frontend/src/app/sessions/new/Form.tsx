@@ -4,6 +4,7 @@ import { useActionState, useState } from 'react'
 import { createSessionAction } from './actions'
 import { SubmitButton } from '@/components/SubmitButton'
 import { ErrorAlert } from '@/components/ErrorAlert'
+import type { TownHallView } from '@/lib/types'
 
 const inputClass =
   'w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500'
@@ -14,7 +15,12 @@ function minDateFor(daysAhead: number): string {
   return d.toISOString().slice(0, 16)
 }
 
-export function CreateSessionForm() {
+interface Props {
+  townHalls: TownHallView[]
+  preselectedCode: string
+}
+
+export function CreateSessionForm({ townHalls, preselectedCode }: Props) {
   const [state, action] = useActionState(createSessionAction, {})
   const [exceptional, setExceptional] = useState(false)
 
@@ -27,16 +33,29 @@ export function CreateSessionForm() {
 
       <div className="space-y-1">
         <label htmlFor="townHallCode" className="block text-sm font-medium">
-          Code INSEE de la mairie
+          Mairie
         </label>
-        <input
-          id="townHallCode"
-          name="townHallCode"
-          type="text"
-          required
-          placeholder="ex : 75056"
-          className={inputClass}
-        />
+        {townHalls.length === 0 ? (
+          <p className="text-sm text-red-600">
+            Aucune mairie enregistrée.{' '}
+            <a href="/town-halls/new" className="underline">Créer une mairie</a> d&apos;abord.
+          </p>
+        ) : (
+          <select
+            id="townHallCode"
+            name="townHallCode"
+            required
+            defaultValue={preselectedCode}
+            className={inputClass}
+          >
+            <option value="">— Sélectionner une mairie —</option>
+            {townHalls.map((t) => (
+              <option key={t.code} value={t.code}>
+                {t.name} ({t.code})
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-4 space-y-1">
