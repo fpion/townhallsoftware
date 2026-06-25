@@ -7,6 +7,7 @@ namespace App\Controller\MunicipalCouncil;
 use App\Domain\MunicipalCouncil\Exception\CouncilSessionNotFoundException;
 use App\Domain\MunicipalCouncil\Exception\CouncilorNotFoundException;
 use App\Domain\MunicipalCouncil\Exception\DeliberationNotFoundException;
+use App\Domain\TownHall\Exception\TownHallNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 trait ApiExceptionHandler
@@ -16,7 +17,8 @@ trait ApiExceptionHandler
         return match (true) {
             $e instanceof CouncilSessionNotFoundException,
             $e instanceof CouncilorNotFoundException,
-            $e instanceof DeliberationNotFoundException => new JsonResponse(
+            $e instanceof DeliberationNotFoundException,
+            $e instanceof TownHallNotFoundException => new JsonResponse(
                 ['error' => $e->getMessage()], 404
             ),
             $e instanceof \InvalidArgumentException => new JsonResponse(

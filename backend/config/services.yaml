@@ -31,3 +31,6 @@ services:
 
     App\Application\MunicipalCouncil\Port\ClockInterface:
         alias: App\Infrastructure\MunicipalCouncil\Clock\SystemClock
+
+    App\Domain\TownHall\Repository\TownHallRepositoryInterface:
+        alias: App\Infrastructure\TownHall\Persistence\InMemoryTownHallRepository
