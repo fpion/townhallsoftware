@@ -41,11 +41,10 @@ final class GetCouncilSessionController
     private function serialize(CouncilSessionView $view): array
     {
         return [
-            'id'              => $view->id,
-            'townHallCode'    => $view->townHallCode,
-            'date'            => $view->date->format(\DateTimeInterface::ATOM),
-            'orderOfBusiness' => $view->orderOfBusiness,
-            'status'          => $view->status,
+            'id'           => $view->id,
+            'townHallCode' => $view->townHallCode,
+            'date'         => $view->date->format(\DateTimeInterface::ATOM),
+            'status'       => $view->status,
             'statusLabel'     => $view->statusLabel,
             'sessionType'     => $view->sessionType,
             'exceptional'     => $view->exceptional,
