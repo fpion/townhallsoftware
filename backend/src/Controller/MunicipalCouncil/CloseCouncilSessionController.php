@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
  * Clôture la séance. Les délibérations encore en attente sont retirées
  * de l'ordre du jour. Aucun body requis.
  */
-#[Route('/api/council-sessions/{id}/close', name: 'api_council_session_close', methods: ['POST'])]
+#[Route('/api/closeCouncilSession/{id}', name: 'api_council_session_close', methods: ['POST'])]
 final class CloseCouncilSessionController
 {
     use ApiExceptionHandler;

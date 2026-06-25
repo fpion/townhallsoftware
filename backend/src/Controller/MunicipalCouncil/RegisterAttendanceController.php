@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Attribute\Route;
  *   - status        : string  ("present" | "absent_excuse" | "absent" | "procuration")
  *   - proxyHolderId : string  (UUID du porteur de procuration, requis si status = "procuration")
  */
-#[Route('/api/council-sessions/{id}/attendances', name: 'api_council_session_register_attendance', methods: ['POST'])]
+#[Route('/api/registerAttendance/{id}', name: 'api_council_session_register_attendance', methods: ['POST'])]
 final class RegisterAttendanceController
 {
     use ApiExceptionHandler;

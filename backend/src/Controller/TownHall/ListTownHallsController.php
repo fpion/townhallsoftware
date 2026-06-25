@@ -10,7 +10,7 @@ use App\Controller\MunicipalCouncil\ApiExceptionHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api/town-halls', name: 'api_town_hall_list', methods: ['GET'])]
+#[Route('/api/listTownHalls', name: 'api_town_hall_list', methods: ['GET'])]
 final class ListTownHallsController
 {
     use ApiExceptionHandler;

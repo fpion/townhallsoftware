@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
  *
  * Le rôle par défaut est CONSEILLER. Utiliser PATCH /api/councilors/{id}/role pour changer.
  */
-#[Route('/api/councilors', name: 'api_councilor_create', methods: ['POST'])]
+#[Route('/api/createCouncilor', name: 'api_councilor_create', methods: ['POST'])]
 final class CreateCouncilorController
 {
     use ApiExceptionHandler;

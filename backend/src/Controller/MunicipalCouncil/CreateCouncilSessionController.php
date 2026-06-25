@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
  *   - orderOfBusiness : string  (texte libre de l'ordre du jour)
  *   - exceptional     : bool    (optionnel, défaut false — 7 jours de délai si true, 15 jours sinon)
  */
-#[Route('/api/council-sessions', name: 'api_council_session_create', methods: ['POST'])]
+#[Route('/api/createCouncilSession', name: 'api_council_session_create', methods: ['POST'])]
 final class CreateCouncilSessionController
 {
     use ApiExceptionHandler;

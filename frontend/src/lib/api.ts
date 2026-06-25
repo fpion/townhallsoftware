@@ -20,7 +20,7 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 // ── Town halls ──────────────────────────────────────────────────────────────
 
 export async function listTownHalls(): Promise<TownHallView[]> {
-  return apiFetch('/api/town-halls')
+  return apiFetch('/api/listTownHalls')
 }
 
 export async function createTownHall(body: {
@@ -31,13 +31,13 @@ export async function createTownHall(body: {
   postalCode: string
   population: number
 }): Promise<void> {
-  await apiFetch('/api/town-halls', { method: 'POST', body: JSON.stringify(body) })
+  await apiFetch('/api/createTownHall', { method: 'POST', body: JSON.stringify(body) })
 }
 
 // ── Councilors ──────────────────────────────────────────────────────────────
 
 export async function listCouncilors(): Promise<CouncilorView[]> {
-  return apiFetch('/api/councilors')
+  return apiFetch('/api/listCouncilors')
 }
 
 export async function createCouncilor(body: {
@@ -45,15 +45,15 @@ export async function createCouncilor(body: {
   lastName: string
   email: string
 }): Promise<{ id: string }> {
-  return apiFetch('/api/councilors', { method: 'POST', body: JSON.stringify(body) })
+  return apiFetch('/api/createCouncilor', { method: 'POST', body: JSON.stringify(body) })
 }
 
 export async function assignCouncilorRole(
   councilorId: string,
   body: { townHallCode: string; role: string },
 ): Promise<void> {
-  await apiFetch(`/api/councilors/${councilorId}/role`, {
-    method: 'PATCH',
+  await apiFetch(`/api/assignCouncilorRole/${councilorId}`, {
+    method: 'POST',
     body: JSON.stringify(body),
   })
 }
@@ -61,7 +61,7 @@ export async function assignCouncilorRole(
 // ── Council sessions ────────────────────────────────────────────────────────
 
 export async function getCouncilSession(id: string): Promise<CouncilSessionView> {
-  return apiFetch(`/api/council-sessions/${id}`)
+  return apiFetch(`/api/getCouncilSession/${id}`)
 }
 
 export async function createCouncilSession(body: {
@@ -70,35 +70,35 @@ export async function createCouncilSession(body: {
   orderOfBusiness: string
   exceptional?: boolean
 }): Promise<{ id: string }> {
-  return apiFetch('/api/council-sessions', {
+  return apiFetch('/api/createCouncilSession', {
     method: 'POST',
     body: JSON.stringify(body),
   })
 }
 
 export async function sendCouncilSessionInvitations(sessionId: string): Promise<void> {
-  await apiFetch(`/api/council-sessions/${sessionId}/invitations`, { method: 'POST' })
+  await apiFetch(`/api/sendCouncilSessionInvitations/${sessionId}`, { method: 'POST' })
 }
 
 export async function registerAttendance(
   sessionId: string,
   body: { councilorId: string; status: string; proxyHolderId?: string },
 ): Promise<void> {
-  await apiFetch(`/api/council-sessions/${sessionId}/attendances`, {
+  await apiFetch(`/api/registerAttendance/${sessionId}`, {
     method: 'POST',
     body: JSON.stringify(body),
   })
 }
 
 export async function openCouncilSession(sessionId: string): Promise<void> {
-  await apiFetch(`/api/council-sessions/${sessionId}/open`, { method: 'POST' })
+  await apiFetch(`/api/openCouncilSession/${sessionId}`, { method: 'POST' })
 }
 
 export async function addDeliberation(
   sessionId: string,
   body: { title: string; description: string },
 ): Promise<{ id: string }> {
-  return apiFetch(`/api/council-sessions/${sessionId}/deliberations`, {
+  return apiFetch(`/api/addDeliberation/${sessionId}`, {
     method: 'POST',
     body: JSON.stringify(body),
   })
@@ -110,11 +110,11 @@ export async function voteOnDeliberation(
   body: { pour: number; contre: number; abstention: number },
 ): Promise<void> {
   await apiFetch(
-    `/api/council-sessions/${sessionId}/deliberations/${deliberationId}/vote`,
+    `/api/voteOnDeliberation/${sessionId}/${deliberationId}`,
     { method: 'POST', body: JSON.stringify(body) },
   )
 }
 
 export async function closeCouncilSession(sessionId: string): Promise<void> {
-  await apiFetch(`/api/council-sessions/${sessionId}/close`, { method: 'POST' })
+  await apiFetch(`/api/closeCouncilSession/${sessionId}`, { method: 'POST' })
 }

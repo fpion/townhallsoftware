@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
  * Doit être appelé au moins 5 jours avant la date de la séance (art. L2121-11 CGCT).
  * Aucun body requis.
  */
-#[Route('/api/council-sessions/{id}/invitations', name: 'api_council_session_send_invitations', methods: ['POST'])]
+#[Route('/api/sendCouncilSessionInvitations/{id}', name: 'api_council_session_send_invitations', methods: ['POST'])]
 final class SendCouncilSessionInvitationsController
 {
     use ApiExceptionHandler;

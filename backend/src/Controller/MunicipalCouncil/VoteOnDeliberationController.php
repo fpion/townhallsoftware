@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
  *   - abstention  : int  (nombre d'abstentions)
  */
 #[Route(
-    '/api/council-sessions/{id}/deliberations/{deliberationId}/vote',
+    '/api/voteOnDeliberation/{id}/{deliberationId}',
     name: 'api_council_session_vote_deliberation',
     methods: ['POST'],
 )]

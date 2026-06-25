@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
  *
  * Retourne l'état complet d'une séance : statut, présences et délibérations.
  */
-#[Route('/api/council-sessions/{id}', name: 'api_council_session_get', methods: ['GET'])]
+#[Route('/api/getCouncilSession/{id}', name: 'api_council_session_get', methods: ['GET'])]
 final class GetCouncilSessionController
 {
     use ApiExceptionHandler;

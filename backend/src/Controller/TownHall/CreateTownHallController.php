@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
  *   - postalCode : string
  *   - population : int
  */
-#[Route('/api/town-halls', name: 'api_town_hall_create', methods: ['POST'])]
+#[Route('/api/createTownHall', name: 'api_town_hall_create', methods: ['POST'])]
 final class CreateTownHallController
 {
     use ApiExceptionHandler;

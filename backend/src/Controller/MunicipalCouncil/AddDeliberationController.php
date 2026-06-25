@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Attribute\Route;
  *   - title       : string  (intitulé de la délibération)
  *   - description : string  (exposé des motifs)
  */
-#[Route('/api/council-sessions/{id}/deliberations', name: 'api_council_session_add_deliberation', methods: ['POST'])]
+#[Route('/api/addDeliberation/{id}', name: 'api_council_session_add_deliberation', methods: ['POST'])]
 final class AddDeliberationController
 {
     use ApiExceptionHandler;

@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
  * Ouvre la séance après vérification du quorum et de l'envoi des convocations.
  * Aucun body requis.
  */
-#[Route('/api/council-sessions/{id}/open', name: 'api_council_session_open', methods: ['POST'])]
+#[Route('/api/openCouncilSession/{id}', name: 'api_council_session_open', methods: ['POST'])]
 final class OpenCouncilSessionController
 {
     use ApiExceptionHandler;

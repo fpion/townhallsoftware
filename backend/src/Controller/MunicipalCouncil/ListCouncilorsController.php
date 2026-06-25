@@ -9,7 +9,7 @@ use App\Application\MunicipalCouncil\Query\ListCouncilors\ListCouncilorsHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api/councilors', name: 'api_councilor_list', methods: ['GET'])]
+#[Route('/api/listCouncilors', name: 'api_councilor_list', methods: ['GET'])]
 final class ListCouncilorsController
 {
     use ApiExceptionHandler;

@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
  *   - townHallCode : string  (code INSEE de la mairie)
  *   - role         : string  (maire | maire_adjoint | conseiller_delegue | conseiller)
  */
-#[Route('/api/councilors/{id}/role', name: 'api_councilor_assign_role', methods: ['PATCH'])]
+#[Route('/api/assignCouncilorRole/{id}', name: 'api_councilor_assign_role', methods: ['POST'])]
 final class AssignCouncilorRoleController
 {
     use ApiExceptionHandler;
