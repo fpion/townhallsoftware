@@ -23,6 +23,7 @@ final class CreateCouncilSessionHandler
             $command->townHallCode,
             $command->date,
             $command->orderOfBusiness,
+            $command->sessionType,
         );
 
         $this->sessionRepository->save($session);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\MunicipalCouncil\Command\SendCouncilSessionInvitations;
 
+use App\Application\MunicipalCouncil\Port\ClockInterface;
 use App\Application\MunicipalCouncil\Port\CouncilorNotifierInterface;
 use App\Domain\MunicipalCouncil\Exception\CouncilSessionNotFoundException;
 use App\Domain\MunicipalCouncil\Repository\CouncilSessionRepositoryInterface;
@@ -13,9 +14,9 @@ use App\Domain\MunicipalCouncil\ValueObject\CouncilSessionId;
 /**
  * Envoie les convocations à tous les conseillers municipaux actifs.
  *
- * Conformément à l'art. L2121-11 CGCT, les convocations doivent parvenir
- * aux conseillers au moins 5 jours francs avant la date de la séance.
- * Cette contrainte de délai est de la responsabilité de l'appelant.
+ * Le délai légal (art. L2121-11 CGCT) est vérifié par l'agrégat :
+ * - Conseil ordinaire    : au moins 15 jours avant la séance
+ * - Conseil exceptionnel : au moins 7 jours avant la séance
  */
 final class SendCouncilSessionInvitationsHandler
 {
@@ -23,6 +24,7 @@ final class SendCouncilSessionInvitationsHandler
         private readonly CouncilSessionRepositoryInterface $sessionRepository,
         private readonly CouncilorRepositoryInterface $councilorRepository,
         private readonly CouncilorNotifierInterface $notifier,
+        private readonly ClockInterface $clock,
     ) {}
 
     public function handle(SendCouncilSessionInvitationsCommand $command): void
@@ -39,8 +41,8 @@ final class SendCouncilSessionInvitationsHandler
 
         $councilors = $this->councilorRepository->findAllActive();
 
-        // Enregistre l'événement domain et protège contre les doubles envois
-        $session->dispatchInvitations($councilors);
+        // Enregistre l'événement domain, vérifie le délai légal et protège contre les doubles envois
+        $session->dispatchInvitations($councilors, $this->clock->now());
 
         // Achemine les convocations via le port de sortie (email, SMS, courrier…)
         $this->notifier->sendSessionInvitation(

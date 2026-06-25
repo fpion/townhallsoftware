@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\MunicipalCouncil\Event;
 
 use App\Domain\MunicipalCouncil\ValueObject\CouncilSessionId;
+use App\Domain\MunicipalCouncil\ValueObject\SessionType;
 
 final class CouncilSessionCreated implements DomainEvent
 {
@@ -13,6 +14,7 @@ final class CouncilSessionCreated implements DomainEvent
         public readonly string $townHallCode,
         public readonly \DateTimeImmutable $sessionDate,
         public readonly string $orderOfBusiness,
+        public readonly SessionType $sessionType,
         private readonly \DateTimeImmutable $occurredAt,
     ) {}
 

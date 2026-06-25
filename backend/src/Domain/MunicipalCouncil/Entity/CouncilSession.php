@@ -15,6 +15,7 @@ use App\Domain\MunicipalCouncil\Event\DomainEvent;
 use App\Domain\MunicipalCouncil\Exception\CouncilorAlreadyRegisteredAttendanceException;
 use App\Domain\MunicipalCouncil\Exception\DeliberationNotFoundException;
 use App\Domain\MunicipalCouncil\Exception\InvitationAlreadySentException;
+use App\Domain\MunicipalCouncil\Exception\InvitationDeadlineNotMetException;
 use App\Domain\MunicipalCouncil\Exception\QuorumNotReachedException;
 use App\Domain\MunicipalCouncil\Exception\SessionAlreadyClosedException;
 use App\Domain\MunicipalCouncil\Exception\SessionNotOpenException;
@@ -24,12 +25,15 @@ use App\Domain\MunicipalCouncil\ValueObject\CouncilorId;
 use App\Domain\MunicipalCouncil\ValueObject\CouncilSessionId;
 use App\Domain\MunicipalCouncil\ValueObject\DeliberationId;
 use App\Domain\MunicipalCouncil\ValueObject\SessionStatus;
+use App\Domain\MunicipalCouncil\ValueObject\SessionType;
 use App\Domain\MunicipalCouncil\ValueObject\VoteResult;
 
 /**
  * Agrégat racine représentant une séance du conseil municipal.
  *
  * Règles métier :
+ * - Délai de convocation (art. L2121-11 CGCT) : 15 jours pour un conseil ordinaire,
+ *   7 jours pour un conseil exceptionnel.
  * - Le quorum est atteint lorsque la majorité des conseillers en exercice est présente
  *   (art. L2121-17 CGCT). La séance ne peut être ouverte sans quorum.
  * - Les délibérations ne peuvent être ajoutées et votées que pendant une séance ouverte.
@@ -55,6 +59,7 @@ class CouncilSession
         private readonly string $townHallCode,
         private readonly \DateTimeImmutable $date,
         private readonly string $orderOfBusiness,
+        private readonly SessionType $type = SessionType::ORDINARY,
     ) {
         if (trim($townHallCode) === '') {
             throw new \InvalidArgumentException('Le code de la mairie ne peut pas être vide.');
@@ -70,6 +75,7 @@ class CouncilSession
             $this->townHallCode,
             $this->date,
             $this->orderOfBusiness,
+            $this->type,
             new \DateTimeImmutable(),
         );
     }
@@ -82,12 +88,14 @@ class CouncilSession
      * Expédie les convocations à chaque conseiller municipal avec l'ordre du jour
      * et les points inscrits à délibérer.
      *
-     * La loi impose un délai minimum de 5 jours francs avant la séance
-     * (art. L2121-11 CGCT). Cette règle doit être vérifiée par l'appelant.
+     * Le délai légal de convocation (art. L2121-11 CGCT) est vérifié ici :
+     * - Conseil ordinaire    : au moins 15 jours avant la séance
+     * - Conseil exceptionnel : au moins 7 jours avant la séance
      *
-     * @param Councilor[] $councilors Liste des conseillers à convoquer
+     * @param Councilor[]      $councilors Liste des conseillers à convoquer
+     * @param \DateTimeImmutable $now       Horodatage courant (injecté pour testabilité)
      */
-    public function dispatchInvitations(array $councilors): void
+    public function dispatchInvitations(array $councilors, \DateTimeImmutable $now): void
     {
         if ($this->status !== SessionStatus::PLANNED) {
             throw new \LogicException(
@@ -104,6 +112,20 @@ class CouncilSession
         if ($councilors === []) {
             throw new \InvalidArgumentException(
                 'La liste des destinataires de la convocation ne peut pas être vide.'
+            );
+        }
+
+        $requiredDays = $this->type->requiredNoticeDays();
+        $daysUntilSession = (int) $now->diff($this->date)->days;
+
+        if ($now >= $this->date || $daysUntilSession < $requiredDays) {
+            throw new InvitationDeadlineNotMetException(
+                sprintf(
+                    'Les convocations doivent être expédiées au moins %d jours avant la séance (art. L2121-11 CGCT). '
+                    . 'Délai restant : %d jour(s).',
+                    $requiredDays,
+                    max(0, $daysUntilSession),
+                )
             );
         }
 
@@ -329,6 +351,11 @@ class CouncilSession
     public function getStatus(): SessionStatus
     {
         return $this->status;
+    }
+
+    public function getType(): SessionType
+    {
+        return $this->type;
     }
 
     /** @return Attendance[] */
