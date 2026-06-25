@@ -23,6 +23,11 @@ final class InMemoryCouncilorRepository implements CouncilorRepositoryInterface
         return $this->store[$id->getValue()] ?? null;
     }
 
+    public function findAll(): array
+    {
+        return array_values($this->store);
+    }
+
     public function findAllActive(): array
     {
         return array_values(

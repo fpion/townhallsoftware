@@ -41,15 +41,17 @@ final class GetCouncilSessionController
     private function serialize(CouncilSessionView $view): array
     {
         return [
-            'id'             => $view->id,
-            'townHallCode'   => $view->townHallCode,
-            'date'           => $view->date->format(\DateTimeInterface::ATOM),
+            'id'              => $view->id,
+            'townHallCode'    => $view->townHallCode,
+            'date'            => $view->date->format(\DateTimeInterface::ATOM),
             'orderOfBusiness' => $view->orderOfBusiness,
-            'status'         => $view->status,
-            'statusLabel'    => $view->statusLabel,
-            'presentCount'   => $view->presentCount,
-            'attendances'    => array_map($this->serializeAttendance(...), $view->attendances),
-            'deliberations'  => array_map($this->serializeDeliberation(...), $view->deliberations),
+            'status'          => $view->status,
+            'statusLabel'     => $view->statusLabel,
+            'sessionType'     => $view->sessionType,
+            'exceptional'     => $view->exceptional,
+            'presentCount'    => $view->presentCount,
+            'attendances'     => array_map($this->serializeAttendance(...), $view->attendances),
+            'deliberations'   => array_map($this->serializeDeliberation(...), $view->deliberations),
         ];
     }
 

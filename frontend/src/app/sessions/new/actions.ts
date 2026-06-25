@@ -11,6 +11,7 @@ export async function createSessionAction(
   const townHallCode = formData.get('townHallCode') as string
   const date = formData.get('date') as string
   const orderOfBusiness = formData.get('orderOfBusiness') as string
+  const exceptional = formData.get('exceptional') === 'true'
 
   if (!townHallCode || !date || !orderOfBusiness) {
     return { error: 'Tous les champs sont obligatoires.' }
@@ -18,7 +19,7 @@ export async function createSessionAction(
 
   let id: string
   try {
-    const result = await createCouncilSession({ townHallCode, date, orderOfBusiness })
+    const result = await createCouncilSession({ townHallCode, date, orderOfBusiness, exceptional })
     id = result.id
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Erreur lors de la création.' }

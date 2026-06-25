@@ -21,4 +21,9 @@ final class InMemoryTownHallRepository implements TownHallRepositoryInterface
     {
         return $this->store[$code] ?? null;
     }
+
+    public function findAll(): array
+    {
+        return array_values($this->store);
+    }
 }

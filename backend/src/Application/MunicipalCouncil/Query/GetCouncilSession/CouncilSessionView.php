@@ -42,6 +42,8 @@ final class CouncilSessionView
         public readonly string $orderOfBusiness,
         public readonly string $status,
         public readonly string $statusLabel,
+        public readonly string $sessionType,
+        public readonly bool $exceptional,
         public readonly int $presentCount,
         public readonly array $attendances,
         public readonly array $deliberations,

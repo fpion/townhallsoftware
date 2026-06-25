@@ -1,4 +1,4 @@
-import type { CouncilSessionView } from './types'
+import type { CouncilSessionView, TownHallView, CouncilorView } from './types'
 
 const API_BASE = process.env.BACKEND_URL ?? 'http://localhost:8000'
 
@@ -17,6 +17,49 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   return data as T
 }
 
+// ── Town halls ──────────────────────────────────────────────────────────────
+
+export async function listTownHalls(): Promise<TownHallView[]> {
+  return apiFetch('/api/town-halls')
+}
+
+export async function createTownHall(body: {
+  code: string
+  name: string
+  street: string
+  city: string
+  postalCode: string
+  population: number
+}): Promise<void> {
+  await apiFetch('/api/town-halls', { method: 'POST', body: JSON.stringify(body) })
+}
+
+// ── Councilors ──────────────────────────────────────────────────────────────
+
+export async function listCouncilors(): Promise<CouncilorView[]> {
+  return apiFetch('/api/councilors')
+}
+
+export async function createCouncilor(body: {
+  firstName: string
+  lastName: string
+  email: string
+}): Promise<{ id: string }> {
+  return apiFetch('/api/councilors', { method: 'POST', body: JSON.stringify(body) })
+}
+
+export async function assignCouncilorRole(
+  councilorId: string,
+  body: { townHallCode: string; role: string },
+): Promise<void> {
+  await apiFetch(`/api/councilors/${councilorId}/role`, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}
+
+// ── Council sessions ────────────────────────────────────────────────────────
+
 export async function getCouncilSession(id: string): Promise<CouncilSessionView> {
   return apiFetch(`/api/council-sessions/${id}`)
 }
@@ -25,6 +68,7 @@ export async function createCouncilSession(body: {
   townHallCode: string
   date: string
   orderOfBusiness: string
+  exceptional?: boolean
 }): Promise<{ id: string }> {
   return apiFetch('/api/council-sessions', {
     method: 'POST',

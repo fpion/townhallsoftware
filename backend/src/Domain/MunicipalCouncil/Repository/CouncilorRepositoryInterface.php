@@ -14,6 +14,9 @@ interface CouncilorRepositoryInterface
     public function findById(CouncilorId $id): ?Councilor;
 
     /** @return Councilor[] */
+    public function findAll(): array;
+
+    /** @return Councilor[] */
     public function findAllActive(): array;
 
     public function countActive(): int;

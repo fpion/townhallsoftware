@@ -1,16 +1,25 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { createSessionAction } from './actions'
 import { SubmitButton } from '@/components/SubmitButton'
 import { ErrorAlert } from '@/components/ErrorAlert'
 
+const inputClass =
+  'w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500'
+
+function minDateFor(daysAhead: number): string {
+  const d = new Date()
+  d.setDate(d.getDate() + daysAhead)
+  return d.toISOString().slice(0, 16)
+}
+
 export function CreateSessionForm() {
   const [state, action] = useActionState(createSessionAction, {})
+  const [exceptional, setExceptional] = useState(false)
 
-  const minDate = new Date()
-  minDate.setDate(minDate.getDate() + 6)
-  const minDateStr = minDate.toISOString().slice(0, 16)
+  const noticeDays = exceptional ? 7 : 15
+  const minDateStr = minDateFor(noticeDays)
 
   return (
     <form action={action} className="space-y-6">
@@ -26,8 +35,27 @@ export function CreateSessionForm() {
           type="text"
           required
           placeholder="ex : 75056"
-          className="w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputClass}
         />
+      </div>
+
+      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-4 space-y-1">
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            name="exceptional"
+            value="true"
+            checked={exceptional}
+            onChange={(e) => setExceptional(e.target.checked)}
+            className="h-4 w-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500"
+          />
+          <span className="text-sm font-medium">Conseil exceptionnel</span>
+        </label>
+        <p className="text-xs text-neutral-500 pl-7">
+          {exceptional
+            ? 'Délai de convocation réduit à 7 jours (art. L2121-11 CGCT).'
+            : 'Délai de convocation ordinaire : 15 jours (art. L2121-11 CGCT).'}
+        </p>
       </div>
 
       <div className="space-y-1">
@@ -35,7 +63,7 @@ export function CreateSessionForm() {
           Date et heure de la séance
         </label>
         <p className="text-xs text-neutral-500">
-          Les convocations doivent être envoyées au moins 5 jours avant (art. L2121-11 CGCT).
+          Les convocations devront être envoyées au moins {noticeDays} jours avant.
         </p>
         <input
           id="date"
@@ -43,7 +71,7 @@ export function CreateSessionForm() {
           type="datetime-local"
           required
           min={minDateStr}
-          className="w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputClass}
         />
       </div>
 
@@ -57,7 +85,7 @@ export function CreateSessionForm() {
           required
           rows={5}
           placeholder="Listez les points à l'ordre du jour…"
-          className="w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+          className={`${inputClass} resize-y`}
         />
       </div>
 

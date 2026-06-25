@@ -66,6 +66,8 @@ final class GetCouncilSessionHandler
             orderOfBusiness: $session->getOrderOfBusiness(),
             status: $session->getStatus()->value,
             statusLabel: $session->getStatus()->label(),
+            sessionType: $session->getType()->value,
+            exceptional: $session->getType()->value === 'exceptional',
             presentCount: $session->getPresentCount(),
             attendances: $attendanceViews,
             deliberations: $deliberationViews,

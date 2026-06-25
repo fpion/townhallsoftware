@@ -1,6 +1,7 @@
 export type SessionStatus = 'planned' | 'open' | 'closed'
 export type AttendanceStatus = 'present' | 'absent_excuse' | 'absent' | 'procuration'
 export type DeliberationStatus = 'pending' | 'adopted' | 'rejected' | 'withdrawn'
+export type CouncilorRole = 'maire' | 'maire_adjoint' | 'conseiller_delegue' | 'conseiller'
 
 export interface AttendanceView {
   councilorId: string
@@ -32,9 +33,32 @@ export interface CouncilSessionView {
   orderOfBusiness: string
   status: SessionStatus
   statusLabel: string
+  sessionType: string
+  exceptional: boolean
   presentCount: number
   attendances: AttendanceView[]
   deliberations: DeliberationView[]
+}
+
+export interface TownHallView {
+  code: string
+  name: string
+  street: string
+  city: string
+  postalCode: string
+  population: number
+  maxCouncilors: number
+  maxAdjoints: number
+}
+
+export interface CouncilorView {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  role: CouncilorRole
+  roleLabel: string
+  active: boolean
 }
 
 export interface ActionState {
