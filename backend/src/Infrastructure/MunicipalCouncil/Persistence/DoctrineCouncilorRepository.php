@@ -20,12 +20,13 @@ final class DoctrineCouncilorRepository implements CouncilorRepositoryInterface
         $record = $this->em->find(CouncilorRecord::class, $councilor->getId()->getValue())
             ?? new CouncilorRecord();
 
-        $record->id        = $councilor->getId()->getValue();
-        $record->firstName = $councilor->getFirstName();
-        $record->lastName  = $councilor->getLastName();
-        $record->email     = $councilor->getEmail();
-        $record->role      = $councilor->getRole()->value;
-        $record->active    = $councilor->isActive();
+        $record->id           = $councilor->getId()->getValue();
+        $record->firstName    = $councilor->getFirstName();
+        $record->lastName     = $councilor->getLastName();
+        $record->email        = $councilor->getEmail();
+        $record->role         = $councilor->getRole()->value;
+        $record->active       = $councilor->isActive();
+        $record->townHallCode = $councilor->getTownHallCode();
 
         $this->em->persist($record);
         $this->em->flush();
@@ -46,11 +47,30 @@ final class DoctrineCouncilorRepository implements CouncilorRepositoryInterface
         );
     }
 
+    public function findByTownHallCode(string $townHallCode): array
+    {
+        return array_map(
+            $this->toDomain(...),
+            $this->em->getRepository(CouncilorRecord::class)->findBy(['townHallCode' => $townHallCode]),
+        );
+    }
+
     public function findAllActive(): array
     {
         return array_map(
             $this->toDomain(...),
             $this->em->getRepository(CouncilorRecord::class)->findBy(['active' => true]),
+        );
+    }
+
+    public function findAllActiveByTownHallCode(string $townHallCode): array
+    {
+        return array_map(
+            $this->toDomain(...),
+            $this->em->getRepository(CouncilorRecord::class)->findBy([
+                'active'       => true,
+                'townHallCode' => $townHallCode,
+            ]),
         );
     }
 
@@ -67,6 +87,7 @@ final class DoctrineCouncilorRepository implements CouncilorRepositoryInterface
             lastName: $record->lastName,
             role: CouncilorRole::from($record->role),
             email: $record->email,
+            townHallCode: $record->townHallCode,
             active: $record->active,
         );
     }

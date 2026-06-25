@@ -38,6 +38,7 @@ final class CreateCouncilorController
                 firstName: (string) $this->require($body, 'firstName'),
                 lastName: (string) $this->require($body, 'lastName'),
                 email: (string) $this->require($body, 'email'),
+                townHallCode: (string) $this->require($body, 'townHallCode'),
             ));
 
             return $this->json(['id' => $id->getValue()], 201);

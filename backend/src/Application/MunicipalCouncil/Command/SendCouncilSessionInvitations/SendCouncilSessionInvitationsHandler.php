@@ -39,7 +39,7 @@ final class SendCouncilSessionInvitationsHandler
             );
         }
 
-        $councilors = $this->councilorRepository->findAllActive();
+        $councilors = $this->councilorRepository->findAllActiveByTownHallCode($session->getTownHallCode());
 
         // Enregistre l'événement domain, vérifie le délai légal et protège contre les doubles envois
         $session->dispatchInvitations($councilors, $this->clock->now());
@@ -47,11 +47,7 @@ final class SendCouncilSessionInvitationsHandler
         // Achemine les convocations via le port de sortie (email, SMS, courrier…)
         $this->notifier->sendSessionInvitation(
             sessionDate: $session->getDate(),
-            orderOfBusiness: $session->getOrderOfBusiness(),
-            agendaItems: array_map(
-                fn($d) => $d->getTitle(),
-                $session->getDeliberations(),
-            ),
+            agendaItems: array_map(fn($d) => $d->getTitle(), $session->getDeliberations()),
             councilors: $councilors,
         );
 

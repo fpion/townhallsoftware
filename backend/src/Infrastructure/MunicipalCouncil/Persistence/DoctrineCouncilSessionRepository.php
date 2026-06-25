@@ -30,13 +30,12 @@ final class DoctrineCouncilSessionRepository implements CouncilSessionRepository
         $record = $this->em->find(CouncilSessionRecord::class, $session->getId()->getValue())
             ?? new CouncilSessionRecord();
 
-        $record->id                  = $session->getId()->getValue();
-        $record->townHallCode        = $session->getTownHallCode();
-        $record->sessionDate         = $session->getDate();
-        $record->orderOfBusiness     = $session->getOrderOfBusiness();
-        $record->sessionType         = $session->getType()->value;
-        $record->status              = $session->getStatus()->value;
-        $record->invitationsSent     = $session->areInvitationsSent();
+        $record->id                   = $session->getId()->getValue();
+        $record->townHallCode         = $session->getTownHallCode();
+        $record->sessionDate          = $session->getDate();
+        $record->sessionType          = $session->getType()->value;
+        $record->status               = $session->getStatus()->value;
+        $record->invitationsSent      = $session->areInvitationsSent();
         $record->deliberationSequence = $session->getDeliberationSequence();
 
         $record->attendances->clear();
@@ -110,7 +109,6 @@ final class DoctrineCouncilSessionRepository implements CouncilSessionRepository
             id: CouncilSessionId::fromString($record->id),
             townHallCode: $record->townHallCode,
             date: $record->sessionDate,
-            orderOfBusiness: $record->orderOfBusiness,
             type: SessionType::from($record->sessionType),
             status: SessionStatus::from($record->status),
             invitationsSent: $record->invitationsSent,

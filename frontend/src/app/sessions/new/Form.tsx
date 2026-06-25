@@ -94,19 +94,9 @@ export function CreateSessionForm({ townHalls, preselectedCode }: Props) {
         />
       </div>
 
-      <div className="space-y-1">
-        <label htmlFor="orderOfBusiness" className="block text-sm font-medium">
-          Ordre du jour
-        </label>
-        <textarea
-          id="orderOfBusiness"
-          name="orderOfBusiness"
-          required
-          rows={5}
-          placeholder="Listez les points à l'ordre du jour…"
-          className={`${inputClass} resize-y`}
-        />
-      </div>
+      <p className="text-sm text-neutral-500 bg-neutral-50 dark:bg-neutral-900 rounded-lg p-3 border border-neutral-200 dark:border-neutral-800">
+        L&apos;ordre du jour sera constitué des points inscrits à délibérer avant l&apos;envoi des convocations.
+      </p>
 
       <SubmitButton label="Créer la séance" pendingLabel="Création…" />
     </form>

@@ -31,7 +31,6 @@ final class CreateCouncilSessionHandler
             $id,
             $command->townHallCode,
             $command->date,
-            $command->orderOfBusiness,
             $command->sessionType,
         );
 

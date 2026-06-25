@@ -11,7 +11,6 @@ final class CreateCouncilSessionCommand
     public function __construct(
         public readonly string $townHallCode,
         public readonly \DateTimeImmutable $date,
-        public readonly string $orderOfBusiness,
         public readonly SessionType $sessionType = SessionType::ORDINARY,
     ) {}
 }

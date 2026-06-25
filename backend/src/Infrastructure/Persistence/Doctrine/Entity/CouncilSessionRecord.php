@@ -22,9 +22,6 @@ class CouncilSessionRecord
     #[ORM\Column(type: 'datetime_immutable')]
     public \DateTimeImmutable $sessionDate;
 
-    #[ORM\Column(type: 'text')]
-    public string $orderOfBusiness;
-
     #[ORM\Column(type: 'string', length: 20)]
     public string $sessionType;
 

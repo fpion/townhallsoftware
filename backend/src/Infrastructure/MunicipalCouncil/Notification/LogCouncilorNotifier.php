@@ -20,7 +20,6 @@ final class LogCouncilorNotifier implements CouncilorNotifierInterface
 
     public function sendSessionInvitation(
         \DateTimeImmutable $sessionDate,
-        string $orderOfBusiness,
         array $agendaItems,
         array $councilors,
     ): void {
@@ -31,7 +30,6 @@ final class LogCouncilorNotifier implements CouncilorNotifierInterface
                 'email'        => $councilor->getEmail(),
                 'role'         => $councilor->getRole()->label(),
                 'date_seance'  => $sessionDate->format('d/m/Y H:i'),
-                'ordre_du_jour' => $orderOfBusiness,
                 'points'        => $agendaItems,
             ]);
         }

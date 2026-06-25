@@ -39,7 +39,6 @@ final class CouncilSessionView
         public readonly string $id,
         public readonly string $townHallCode,
         public readonly \DateTimeImmutable $date,
-        public readonly string $orderOfBusiness,
         public readonly string $status,
         public readonly string $statusLabel,
         public readonly string $sessionType,

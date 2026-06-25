@@ -15,6 +15,7 @@ class Councilor
         private string $lastName,
         private CouncilorRole $role,
         private string $email,
+        private readonly string $townHallCode,
         private bool $active = true,
     ) {
         if (trim($firstName) === '') {
@@ -27,6 +28,9 @@ class Councilor
             throw new \InvalidArgumentException(
                 sprintf('L\'adresse email "%s" est invalide.', $email)
             );
+        }
+        if (trim($townHallCode) === '') {
+            throw new \InvalidArgumentException('Le code de la mairie ne peut pas être vide.');
         }
     }
 
@@ -53,6 +57,11 @@ class Councilor
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getTownHallCode(): string
+    {
+        return $this->townHallCode;
     }
 
     public function getRole(): CouncilorRole

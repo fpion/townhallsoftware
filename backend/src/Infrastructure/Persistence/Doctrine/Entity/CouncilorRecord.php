@@ -28,4 +28,7 @@ class CouncilorRecord
 
     #[ORM\Column(type: 'boolean')]
     public bool $active;
+
+    #[ORM\Column(type: 'string', length: 20)]
+    public string $townHallCode;
 }

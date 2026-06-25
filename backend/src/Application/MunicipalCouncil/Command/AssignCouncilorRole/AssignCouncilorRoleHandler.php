@@ -49,7 +49,7 @@ final class AssignCouncilorRoleHandler
         }
 
         $composition = CouncilCompositionRule::fromPopulation($townHall->getPopulation());
-        $activeCouncilors = $this->councilorRepository->findAllActive();
+        $activeCouncilors = $this->councilorRepository->findAllActiveByTownHallCode($command->townHallCode);
 
         match ($command->newRole) {
             CouncilorRole::MAIRE => $this->guardMaireUnique($command->councilorId, $activeCouncilors),

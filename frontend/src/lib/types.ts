@@ -30,7 +30,6 @@ export interface CouncilSessionView {
   id: string
   townHallCode: string
   date: string
-  orderOfBusiness: string
   status: SessionStatus
   statusLabel: string
   sessionType: string
@@ -69,6 +68,7 @@ export interface CouncilorView {
   role: CouncilorRole
   roleLabel: string
   active: boolean
+  townHallCode: string
 }
 
 export interface ActionState {

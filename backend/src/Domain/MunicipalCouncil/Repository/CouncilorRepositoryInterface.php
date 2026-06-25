@@ -17,7 +17,13 @@ interface CouncilorRepositoryInterface
     public function findAll(): array;
 
     /** @return Councilor[] */
+    public function findByTownHallCode(string $townHallCode): array;
+
+    /** @return Councilor[] */
     public function findAllActive(): array;
+
+    /** @return Councilor[] */
+    public function findAllActiveByTownHallCode(string $townHallCode): array;
 
     public function countActive(): int;
 }

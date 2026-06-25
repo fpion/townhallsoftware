@@ -32,11 +32,13 @@ use App\Domain\MunicipalCouncil\ValueObject\VoteResult;
  * Agrégat racine représentant une séance du conseil municipal.
  *
  * Règles métier :
+ * - L'ordre du jour est constitué des titres des délibérations inscrites avant la convocation.
  * - Délai de convocation (art. L2121-11 CGCT) : 15 jours pour un conseil ordinaire,
  *   7 jours pour un conseil exceptionnel.
  * - Le quorum est atteint lorsque la majorité des conseillers en exercice est présente
  *   (art. L2121-17 CGCT). La séance ne peut être ouverte sans quorum.
- * - Les délibérations ne peuvent être ajoutées et votées que pendant une séance ouverte.
+ * - Les délibérations peuvent être inscrites à l'ordre du jour avant ouverture (PLANNED)
+ *   ou ajoutées en cours de séance (OPEN). Le vote est réservé à l'état OPEN.
  * - Un conseiller absent peut donner procuration à un conseiller présent (art. L2121-20 CGCT).
  */
 class CouncilSession
@@ -58,14 +60,10 @@ class CouncilSession
         private readonly CouncilSessionId $id,
         private readonly string $townHallCode,
         private readonly \DateTimeImmutable $date,
-        private readonly string $orderOfBusiness,
         private readonly SessionType $type = SessionType::ORDINARY,
     ) {
         if (trim($townHallCode) === '') {
             throw new \InvalidArgumentException('Le code de la mairie ne peut pas être vide.');
-        }
-        if (trim($orderOfBusiness) === '') {
-            throw new \InvalidArgumentException('L\'ordre du jour ne peut pas être vide.');
         }
 
         $this->status = SessionStatus::PLANNED;
@@ -74,7 +72,6 @@ class CouncilSession
             $this->id,
             $this->townHallCode,
             $this->date,
-            $this->orderOfBusiness,
             $this->type,
             new \DateTimeImmutable(),
         );
@@ -85,12 +82,8 @@ class CouncilSession
     // -------------------------------------------------------------------------
 
     /**
-     * Expédie les convocations à chaque conseiller municipal avec l'ordre du jour
-     * et les points inscrits à délibérer.
-     *
-     * Le délai légal de convocation (art. L2121-11 CGCT) est vérifié ici :
-     * - Conseil ordinaire    : au moins 15 jours avant la séance
-     * - Conseil exceptionnel : au moins 7 jours avant la séance
+     * Expédie les convocations à chaque conseiller municipal.
+     * L'ordre du jour est automatiquement constitué des titres des délibérations inscrites.
      *
      * @param Councilor[]      $councilors Liste des conseillers à convoquer
      * @param \DateTimeImmutable $now       Horodatage courant (injecté pour testabilité)
@@ -112,6 +105,12 @@ class CouncilSession
         if ($councilors === []) {
             throw new \InvalidArgumentException(
                 'La liste des destinataires de la convocation ne peut pas être vide.'
+            );
+        }
+
+        if ($this->deliberations === []) {
+            throw new \DomainException(
+                'Impossible d\'envoyer les convocations : aucun point inscrit à l\'ordre du jour.'
             );
         }
 
@@ -140,7 +139,6 @@ class CouncilSession
         $this->domainEvents[] = new CouncilSessionInvitationsSent(
             sessionId: $this->id,
             sessionDate: $this->date,
-            orderOfBusiness: $this->orderOfBusiness,
             agendaItems: $agendaItems,
             notifiedCouncilorIds: $notifiedIds,
             occurredAt: new \DateTimeImmutable(),
@@ -267,11 +265,15 @@ class CouncilSession
     // Gestion des délibérations
     // -------------------------------------------------------------------------
 
+    /**
+     * Inscrit un point à l'ordre du jour.
+     * Autorisé en état PLANNED (préparation) ou OPEN (ajout en cours de séance).
+     */
     public function addDeliberation(string $title, string $description): DeliberationId
     {
-        if ($this->status !== SessionStatus::OPEN) {
-            throw new SessionNotOpenException(
-                'Les délibérations ne peuvent être ajoutées qu\'à une séance ouverte.'
+        if ($this->status === SessionStatus::CLOSED) {
+            throw new SessionAlreadyClosedException(
+                'Impossible d\'ajouter un point : la séance est clôturée.'
             );
         }
 
@@ -343,11 +345,6 @@ class CouncilSession
         return $this->date;
     }
 
-    public function getOrderOfBusiness(): string
-    {
-        return $this->orderOfBusiness;
-    }
-
     public function getStatus(): SessionStatus
     {
         return $this->status;
@@ -406,7 +403,6 @@ class CouncilSession
         CouncilSessionId $id,
         string $townHallCode,
         \DateTimeImmutable $date,
-        string $orderOfBusiness,
         SessionType $type,
         SessionStatus $status,
         bool $invitationsSent,
@@ -414,7 +410,7 @@ class CouncilSession
         array $attendances,
         array $deliberations,
     ): self {
-        $session = new self($id, $townHallCode, $date, $orderOfBusiness, $type);
+        $session = new self($id, $townHallCode, $date, $type);
         $session->domainEvents        = [];
         $session->status              = $status;
         $session->invitationsSent     = $invitationsSent;

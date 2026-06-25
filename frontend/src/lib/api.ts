@@ -36,14 +36,15 @@ export async function createTownHall(body: {
 
 // ── Councilors ──────────────────────────────────────────────────────────────
 
-export async function listCouncilors(): Promise<CouncilorView[]> {
-  return apiFetch('/api/listCouncilors')
+export async function listCouncilors(townHallCode: string): Promise<CouncilorView[]> {
+  return apiFetch(`/api/listCouncilors?townHallCode=${encodeURIComponent(townHallCode)}`)
 }
 
 export async function createCouncilor(body: {
   firstName: string
   lastName: string
   email: string
+  townHallCode: string
 }): Promise<{ id: string }> {
   return apiFetch('/api/createCouncilor', { method: 'POST', body: JSON.stringify(body) })
 }
@@ -71,7 +72,6 @@ export async function getCouncilSession(id: string): Promise<CouncilSessionView>
 export async function createCouncilSession(body: {
   townHallCode: string
   date: string
-  orderOfBusiness: string
   exceptional?: boolean
 }): Promise<{ id: string }> {
   return apiFetch('/api/createCouncilSession', {

@@ -20,7 +20,6 @@ interface CouncilorNotifierInterface
      */
     public function sendSessionInvitation(
         \DateTimeImmutable $sessionDate,
-        string $orderOfBusiness,
         array $agendaItems,
         array $councilors,
     ): void;

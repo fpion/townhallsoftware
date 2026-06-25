@@ -63,7 +63,6 @@ final class GetCouncilSessionHandler
             id: $session->getId()->getValue(),
             townHallCode: $session->getTownHallCode(),
             date: $session->getDate(),
-            orderOfBusiness: $session->getOrderOfBusiness(),
             status: $session->getStatus()->value,
             statusLabel: $session->getStatus()->label(),
             sessionType: $session->getType()->value,

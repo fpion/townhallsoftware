@@ -14,5 +14,6 @@ final class CouncilorView
         public readonly string $role,
         public readonly string $roleLabel,
         public readonly bool $active,
+        public readonly string $townHallCode,
     ) {}
 }

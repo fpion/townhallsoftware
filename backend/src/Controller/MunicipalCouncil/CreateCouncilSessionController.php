@@ -39,7 +39,6 @@ final class CreateCouncilSessionController
             $command = new CreateCouncilSessionCommand(
                 townHallCode: (string) $this->require($body, 'townHallCode'),
                 date: new \DateTimeImmutable((string) $this->require($body, 'date')),
-                orderOfBusiness: (string) $this->require($body, 'orderOfBusiness'),
                 sessionType: $isExceptional ? SessionType::EXCEPTIONAL : SessionType::ORDINARY,
             );
 

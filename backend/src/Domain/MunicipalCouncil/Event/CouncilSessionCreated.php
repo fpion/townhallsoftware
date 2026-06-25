@@ -13,7 +13,6 @@ final class CouncilSessionCreated implements DomainEvent
         public readonly CouncilSessionId $sessionId,
         public readonly string $townHallCode,
         public readonly \DateTimeImmutable $sessionDate,
-        public readonly string $orderOfBusiness,
         public readonly SessionType $sessionType,
         private readonly \DateTimeImmutable $occurredAt,
     ) {}

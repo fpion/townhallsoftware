@@ -52,14 +52,6 @@ export default async function SessionPage({
         <SessionActions sessionId={id} status={session.status} />
       </div>
 
-      {/* Ordre du jour */}
-      <section>
-        <h2 className="text-lg font-semibold mb-2">Ordre du jour</h2>
-        <p className="whitespace-pre-wrap text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-900 rounded-lg p-4 border border-neutral-200 dark:border-neutral-800">
-          {session.orderOfBusiness}
-        </p>
-      </section>
-
       {/* Présences */}
       <section>
         <div className="flex items-center justify-between mb-4">
@@ -104,12 +96,12 @@ export default async function SessionPage({
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Délibérations</h2>
-          {session.status === 'open' && (
+          {session.status !== 'closed' && (
             <Link
               href={`/sessions/${id}/deliberations/new`}
               className="text-sm text-blue-600 hover:underline"
             >
-              + Ajouter une délibération
+              + Inscrire un point
             </Link>
           )}
         </div>

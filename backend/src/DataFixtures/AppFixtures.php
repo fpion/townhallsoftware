@@ -89,6 +89,7 @@ class AppFixtures extends Fixture
             );
             $councilor->role = $role->value;
             $councilor->active = $active;
+            $councilor->townHallCode = self::TOWN_HALL_CODE;
 
             $manager->persist($councilor);
             $records[$key] = $councilor;
@@ -106,9 +107,6 @@ class AppFixtures extends Fixture
         $session->id = 'a0000000-0000-4000-8000-000000000001';
         $session->townHallCode = self::TOWN_HALL_CODE;
         $session->sessionDate = new \DateTimeImmutable('2026-03-12 19:00:00');
-        $session->orderOfBusiness = "1. Approbation du budget primitif 2026\n"
-            . "2. Subventions aux associations sportives\n"
-            . "3. Renovation energetique de l'ecole Jean-Moulin";
         $session->sessionType = SessionType::ORDINARY->value;
         $session->status = SessionStatus::CLOSED->value;
         $session->invitationsSent = true;
@@ -186,9 +184,6 @@ class AppFixtures extends Fixture
         $session->id = 'a0000000-0000-4000-8000-000000000002';
         $session->townHallCode = self::TOWN_HALL_CODE;
         $session->sessionDate = new \DateTimeImmutable('2026-06-25 19:00:00');
-        $session->orderOfBusiness = "1. Compte administratif 2025\n"
-            . "2. Plan local d'urbanisme : revision allegee\n"
-            . "3. Questions diverses";
         $session->sessionType = SessionType::ORDINARY->value;
         $session->status = SessionStatus::PLANNED->value;
         $session->invitationsSent = false;

@@ -20,7 +20,6 @@ final class CouncilSessionInvitationsSent implements DomainEvent
     public function __construct(
         public readonly CouncilSessionId $sessionId,
         public readonly \DateTimeImmutable $sessionDate,
-        public readonly string $orderOfBusiness,
         public readonly array $agendaItems,
         public readonly array $notifiedCouncilorIds,
         private readonly \DateTimeImmutable $occurredAt,

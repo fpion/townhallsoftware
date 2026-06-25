@@ -28,10 +28,24 @@ final class InMemoryCouncilorRepository implements CouncilorRepositoryInterface
         return array_values($this->store);
     }
 
+    public function findByTownHallCode(string $townHallCode): array
+    {
+        return array_values(
+            array_filter($this->store, fn(Councilor $c) => $c->getTownHallCode() === $townHallCode)
+        );
+    }
+
     public function findAllActive(): array
     {
         return array_values(
             array_filter($this->store, fn(Councilor $c) => $c->isActive())
+        );
+    }
+
+    public function findAllActiveByTownHallCode(string $townHallCode): array
+    {
+        return array_values(
+            array_filter($this->store, fn(Councilor $c) => $c->isActive() && $c->getTownHallCode() === $townHallCode)
         );
     }
 
