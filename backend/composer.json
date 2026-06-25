@@ -67,5 +67,9 @@
             "allow-contrib": false,
             "require": "8.1.*"
         }
+    },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.3",
+        "doctrine/doctrine-migrations-bundle": "^4.0"
     }
 }
